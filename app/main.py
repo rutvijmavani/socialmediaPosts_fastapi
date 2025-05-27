@@ -56,11 +56,6 @@ def get_posts():
 
 @app.post("/posts" , status_code = status.HTTP_201_CREATED)
 def create_posts(post : Post):
-    """print(post.published)
-    print(post)
-    post_dict = post.dict()
-    post_dict['id'] = randrange(0 , 1000000)
-    my_posts.append(post_dict)"""
 
     cursor.execute("""insert into posts (title , content , published) values (%s , %s , %s) returning * """ , \
                    (post.title , post.content , post.published))
@@ -71,34 +66,39 @@ def create_posts(post : Post):
 
 @app.get("/posts/{id}")
 def get_posts(id : int):
-    print(type(id))
-    post = find_post(id)
+    
+    cursor.execute("""select * from posts where id = %s""" , (str(id))) 
+    post = cursor.fetchone()
+
     if not post:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail = f"Post with id: {id} was not found")
-        #response.status_code = status.HTTP_404_NOT_FOUND 
-        #return {"message" : f"Post with id: {id} was not found"}
+
     return{"post_detail" : post}
 
 @app.delete("/posts/{id}" , status_code = status.HTTP_204_NO_CONTENT)
 def delete_post(id : int):
-    #deleting post
-    index = find_index_post(id)
+    
+    cursor.execute("delete from posts where id = %s returning * " , (str(id),))
+    deleted_post = cursor.fetchone()
+    conn.commit()
 
-    if index == None:
+    if deleted_post == None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail = f"post with id: {id} does not exist!")
     
-    my_posts.pop(index)
+
     return Response(status_code = status.HTTP_204_NO_CONTENT )
 
 @app.put("/posts/{id}")
 def update_post(id : int , post : Post):
-    print(post)
-    index = find_index_post(id)
 
-    if index == None:
+    cursor.execute("update posts set title = %s , content = %s , published = %s where id = %s returning * " , \
+                   (post.title , post.content , post.published , str(id)))
+    
+    updated_post = cursor.fetchone()
+    conn.commit()
+
+    if updated_post == None:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND , detail = f"post with id: {id} does not exist!")
     
-    post_dict = post.dict()
-    post_dict['id'] = id
-    my_posts[index] = post_dict
-    return {"data" : post_dict}
+
+    return {"data" : updated_post}
