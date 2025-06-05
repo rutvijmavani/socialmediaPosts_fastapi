@@ -4,6 +4,7 @@ from jose import JWTError , jwt
 from datetime import datetime , timedelta
 from . import schemas , database , models
 from sqlalchemy.orm import Session
+from .config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl = 'login' )
 
@@ -11,9 +12,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl = 'login' )
 #ALGORITHM
 #EXPIRATION TIME
 
-SECRET_KEY = "c3e68a1fc0b8eedbcf594c4f74531f85728f100a214fcf4f59b10b9fd4ebc295"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 def create_access_token(data : dict):
     to_encode = data.copy()
@@ -29,9 +30,7 @@ def create_access_token(data : dict):
 
 def verify_access_token(token : str , credentials_exception):
     try:
-        print(token)
         payload = jwt.decode(token , SECRET_KEY , algorithms = [ALGORITHM])
-        print(payload)
 
         id : str = payload.get("user_id")
 
@@ -39,12 +38,9 @@ def verify_access_token(token : str , credentials_exception):
             raise credentials_exception 
     
         token_data  = schemas.TokenData(id = id) 
-        print(token_data)
-        print(type(token_data))
 
     except JWTError: 
         raise credentials_exception
-    
     
     return token_data
     

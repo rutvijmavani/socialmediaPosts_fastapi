@@ -1,14 +1,10 @@
-from typing import Optional , List
-from warnings import deprecated
-from fastapi import FastAPI , Response , status , HTTPException , Depends
-from fastapi.params import Body
-from pydantic import BaseModel
-from .routers import post , user , auth
+from fastapi import FastAPI
+from .routers import post , user , auth , vote
+from . import models
+from . database import engine
+from .config import settings
 
-import time
-from sqlalchemy.orm import Session
-from . import models , schemas , utils
-from . database import engine , get_db
+
 
 
 models.Base.metadata.create_all(bind = engine) 
@@ -18,6 +14,7 @@ app = FastAPI()
 app.include_router(post.router)
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(vote.router)
  
 @app.get("/")
 def root():
