@@ -133,15 +133,6 @@ alembic upgrade head
 
 ---
 
-## 🧑 Author
-
-**Rutvij Mavani**  
-📧 rutvijmavani@gmail.com  
-🔗 [LinkedIn](https://linkedin.com/in/mavanirutvij)  
-🔗 [GitHub](https://github.com/rutvijmavani)
-
----
-
 
 ## 📌 Notes
 
