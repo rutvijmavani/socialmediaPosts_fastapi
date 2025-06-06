@@ -1,0 +1,62 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+.env 
+.env.*
+__pycache__
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# Environment variables
+.env
+.env.*
+
+# VSCode or PyCharm IDE settings
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python dependency files
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Testing
+.pytest_cache/
+coverage/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# MyPy & type checking
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# Logs
+*.log
+
+# Alembic migration cache (optional but safe)
+alembic.ini
+alembic/versions/__pycache__/
+
+# Database files (if using SQLite locally)
+*.sqlite3
+*.db
+
+# Docker (optional)
+**/.dockerignore
+docker-compose.override.yml
